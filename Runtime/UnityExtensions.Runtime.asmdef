@@ -1,6 +1,6 @@
 {
     "name": "UnityExtensions.Runtime",
-    "rootNamespace": "",
+    "rootNamespace": "UnityExtensions.Runtime",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

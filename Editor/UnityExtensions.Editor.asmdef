@@ -1,6 +1,6 @@
 {
     "name": "UnityExtensions.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "UnityExtensions.Editor",
     "references": [],
     "includePlatforms": [
         "Editor"
