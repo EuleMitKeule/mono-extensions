@@ -1,0 +1,13 @@
+{
+    "name": "com.eule.unity-extensions",
+    "version": "0.1.0",
+    "description": "Commonly used methods missing from the Unity Scripting Framework.",
+    "displayName": "unity-extensions",
+    "unity": "2020.1",
+    "author": 
+    {
+        "name": "Lennard Beers",
+        "email": "l.beers@outlook.de",
+        "url": "https://eulenet.eu/"
+    }
+}
