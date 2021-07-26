@@ -21,6 +21,8 @@ namespace UnityExtensions.Runtime
             var components = CachedComponents[gameObject];
             var cachedComponent = components.Find(e => e is T);
 
+            if (cachedComponent) return cachedComponent as T;
+
             cachedComponent ??= gameObject.GetComponent<T>();
 
             if (cachedComponent) components.Add(cachedComponent);
