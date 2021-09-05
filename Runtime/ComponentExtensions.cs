@@ -7,7 +7,8 @@ namespace UnityExtensions.Runtime
 {
     public static class ComponentExtensions
     {
-        static Dictionary<GameObject, List<Component>> CachedComponents { get; } = new Dictionary<GameObject, List<Component>>();
+        static Dictionary<GameObject, Dictionary<Type, Component>> CachedComponents { get; } =
+            new Dictionary<GameObject, Dictionary<Type, Component>>();
 
         public static T GetCachedComponent<T>(this Component component) where T : Component
         {
@@ -15,19 +16,20 @@ namespace UnityExtensions.Runtime
 
             if (!CachedComponents.ContainsKey(gameObject))
             {
-                CachedComponents.Add(gameObject, new List<Component>());
+                CachedComponents.Add(gameObject, new Dictionary<Type, Component>());
             }
 
             var components = CachedComponents[gameObject];
-            var cachedComponent = components.Find(e => e is T);
+            var componentType = typeof(T);
+            if (components.ContainsKey(componentType))
+            {
+                var cachedComponent = components[typeof(T)];
+                if (cachedComponent) return cachedComponent as T;
+            }
 
-            if (cachedComponent) return cachedComponent as T;
-
-            cachedComponent ??= gameObject.GetComponent<T>();
-
-            if (cachedComponent) components.Add(cachedComponent);
-
-            return cachedComponent as T;
+            var uncachedComponent = gameObject.GetComponent<T>();
+            if (uncachedComponent) components.Add(componentType, uncachedComponent);
+            return uncachedComponent;
         }
 
         public static void AddComponent<T>(this Component component) where T : Component =>
