@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace UnityExtensions.Runtime
+namespace MonoExtensions.Runtime
 {
     public static class MonoBehaviourExtensions
     {
