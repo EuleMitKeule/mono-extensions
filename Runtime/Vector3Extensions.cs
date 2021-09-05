@@ -20,5 +20,9 @@ namespace UnityExtensions.Runtime
             var y = Mathf.Sin(Mathf.Deg2Rad * angle) * vector.x + Mathf.Cos(Mathf.Deg2Rad * angle) * vector.y;
             return new Vector3(x, y, vector.z);
         }
+
+        public static Vector3Int ToCell(this Vector3 vector) =>
+            new Vector3Int(Mathf.FloorToInt(vector.x), Mathf.FloorToInt(vector.y), Mathf.FloorToInt(vector.z));
+
     }
 }
