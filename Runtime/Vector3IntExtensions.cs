@@ -9,7 +9,7 @@ namespace UnityExtensions.Runtime
         /// </summary>
         /// <param name="cellPosition"></param>
         /// <returns></returns>
-        public static Vector3 ToWorld(this Vector3Int cellPosition) =>
+        public static Vector3 ToWorld(this Vector3Int vector) =>
             new Vector3(vector.x + 0.5f, vector.y + 0.5f, 0f);
 
         public static float DistanceTo(this Vector3Int from, Vector3Int to) =>
