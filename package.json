@@ -1,6 +1,6 @@
 {
     "name": "com.eule.mono-extensions",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Commonly used methods missing from the Unity Scripting Framework.",
     "displayName": "mono-extensions",
     "unity": "2021.1",

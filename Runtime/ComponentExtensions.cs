@@ -5,31 +5,42 @@ using UnityEngine;
 
 namespace MonoExtensions.Runtime
 {
+    public interface ICachingComponent
+    {
+        void OnComponentRegistered<TCom>(TCom component) where TCom : Component;
+    }
+
     public static class ComponentExtensions
     {
-        static Dictionary<GameObject, Dictionary<Type, Component>> CachedComponents { get; } =
-            new Dictionary<GameObject, Dictionary<Type, Component>>();
+        static Dictionary<Component, Dictionary<Type, Component>> ComponentToCachedCachedComponents { get; } =
+            new Dictionary<Component, Dictionary<Type, Component>>();
 
-        public static T GetCachedComponent<T>(this Component component) where T : Component
+        public static TCom GetCachedComponent<TCom>(this Component component) where TCom : Component
         {
-            var gameObject = component.gameObject;
-
-            if (!CachedComponents.ContainsKey(gameObject))
+            if (!ComponentToCachedCachedComponents.ContainsKey(component))
             {
-                CachedComponents.Add(gameObject, new Dictionary<Type, Component>());
+                ComponentToCachedCachedComponents.Add(component, new Dictionary<Type, Component>());
             }
 
-            var components = CachedComponents[gameObject];
-            var componentType = typeof(T);
-            if (components.ContainsKey(componentType))
+            var cachedComponents = ComponentToCachedCachedComponents[component];
+            var componentType = typeof(TCom);
+
+            if (!cachedComponents.ContainsKey(componentType))
             {
-                var cachedComponent = components[typeof(T)];
-                if (cachedComponent) return cachedComponent as T;
+                var uncachedComponent = component.GetComponent<TCom>();
+                if (!uncachedComponent) return uncachedComponent;
+
+                cachedComponents.Add(componentType, uncachedComponent);
+
+                if (uncachedComponent is ICachingComponent cachingComponent)
+                {
+                    cachingComponent.OnComponentRegistered(uncachedComponent);
+                }
+                return uncachedComponent;
             }
 
-            var uncachedComponent = gameObject.GetComponent<T>();
-            if (uncachedComponent) components.Add(componentType, uncachedComponent);
-            return uncachedComponent;
+            var cachedComponent = cachedComponents[componentType];
+            return cachedComponent as TCom;
         }
 
         public static void AddComponent<T>(this Component component) where T : Component =>
