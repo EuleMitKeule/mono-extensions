@@ -15,7 +15,7 @@ namespace MonoExtensions.Runtime
         static Dictionary<Component, Dictionary<Type, Component>> ComponentToCachedCachedComponents { get; } =
             new Dictionary<Component, Dictionary<Type, Component>>();
 
-        public static TCom GetCachedComponent<TCom>(this Component component) where TCom : Component
+        public static TCom GetCachedComponent<TCom>(this Component component, int index = 0) where TCom : Component
         {
             if (!ComponentToCachedCachedComponents.ContainsKey(component))
             {
@@ -27,9 +27,11 @@ namespace MonoExtensions.Runtime
 
             if (!cachedComponents.ContainsKey(componentType))
             {
-                var uncachedComponent = component.GetComponent<TCom>();
-                if (!uncachedComponent) return uncachedComponent;
+                var uncachedComponents = component.GetComponents<TCom>();
 
+                if (index < 0 || index >= uncachedComponents.Length) return null;
+
+                var uncachedComponent = uncachedComponents[index];
                 cachedComponents.Add(componentType, uncachedComponent);
 
                 if (uncachedComponent is ICachingComponent cachingComponent)
