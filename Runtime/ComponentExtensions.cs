@@ -12,14 +12,14 @@ namespace MonoExtensions.Runtime
 
     public static class ComponentExtensions
     {
-        static Dictionary<Component, Dictionary<Type, Component>> ComponentToCachedCachedComponents { get; } =
-            new Dictionary<Component, Dictionary<Type, Component>>();
+        static Dictionary<Component, Dictionary<Type, Component[]>> ComponentToCachedCachedComponents { get; } =
+            new Dictionary<Component, Dictionary<Type, Component[]>>();
 
         public static TCom GetCachedComponent<TCom>(this Component component, int index = 0) where TCom : Component
         {
             if (!ComponentToCachedCachedComponents.ContainsKey(component))
             {
-                ComponentToCachedCachedComponents.Add(component, new Dictionary<Type, Component>());
+                ComponentToCachedCachedComponents.Add(component, new Dictionary<Type, Component[]>());
             }
 
             var cachedComponents = ComponentToCachedCachedComponents[component];
@@ -32,7 +32,7 @@ namespace MonoExtensions.Runtime
                 if (index < 0 || index >= uncachedComponents.Length) return null;
 
                 var uncachedComponent = uncachedComponents[index];
-                cachedComponents.Add(componentType, uncachedComponent);
+                cachedComponents.Add(componentType, uncachedComponents.ToArray<Component>());
 
                 if (uncachedComponent is ICachingComponent cachingComponent)
                 {
