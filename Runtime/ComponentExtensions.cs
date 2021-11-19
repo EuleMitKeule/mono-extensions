@@ -12,27 +12,29 @@ namespace MonoExtensions.Runtime
 
     public static class ComponentExtensions
     {
-        static Dictionary<Component, Dictionary<Type, Component[]>> ComponentToCachedCachedComponents { get; } =
+        static Dictionary<Component, Dictionary<Type, Component[]>> ComponentToCachedComponents { get; } =
             new Dictionary<Component, Dictionary<Type, Component[]>>();
 
         public static TCom GetCachedComponent<TCom>(this Component component, int index = 0) where TCom : Component
         {
-            if (!ComponentToCachedCachedComponents.ContainsKey(component))
+            if (index < 0) return null;
+
+            if (!ComponentToCachedComponents.ContainsKey(component))
             {
-                ComponentToCachedCachedComponents.Add(component, new Dictionary<Type, Component[]>());
+                ComponentToCachedComponents.Add(component, new Dictionary<Type, Component[]>());
             }
 
-            var cachedComponents = ComponentToCachedCachedComponents[component];
+            var cachedComponents = ComponentToCachedComponents[component];
             var componentType = typeof(TCom);
 
-            if (!cachedComponents.ContainsKey(componentType))
+            if (!cachedComponents.ContainsKey(componentType) || index >= cachedComponents[componentType].Length)
             {
                 var uncachedComponents = component.GetComponents<TCom>();
 
-                if (index < 0 || index >= uncachedComponents.Length) return null;
+                if (index >= uncachedComponents.Length) return null;
+                cachedComponents.Add(componentType, uncachedComponents.ToArray<Component>());
 
                 var uncachedComponent = uncachedComponents[index];
-                cachedComponents.Add(componentType, uncachedComponents.ToArray<Component>());
 
                 if (uncachedComponent is ICachingComponent cachingComponent)
                 {
@@ -41,7 +43,7 @@ namespace MonoExtensions.Runtime
                 return uncachedComponent;
             }
 
-            var cachedComponent = cachedComponents[componentType];
+            var cachedComponent = cachedComponents[componentType][index];
             return cachedComponent as TCom;
         }
 
