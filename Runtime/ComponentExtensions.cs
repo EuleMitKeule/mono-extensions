@@ -56,7 +56,7 @@ namespace MonoExtensions.Runtime
         public static Transform Parent(this Component component) =>
             component.transform.parent;
 
-        public static List<Transform> Children(this Component component)
+        public static List<Transform> Children(this Component component, bool recursive = false)
         {
             var children = new List<Transform>();
 
@@ -64,6 +64,8 @@ namespace MonoExtensions.Runtime
             {
                 var child = component.transform.GetChild(i);
                 children.Add(child);
+
+                if (recursive) children.AddRange(child.Children(true));
             }
 
             return children;

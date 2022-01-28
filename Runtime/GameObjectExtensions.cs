@@ -30,7 +30,7 @@ namespace MonoExtensions.Runtime
         public static Transform Parent(this GameObject gameObject) =>
             gameObject.transform.parent;
 
-        public static List<Transform> Children(this GameObject gameObject)
+        public static List<Transform> Children(this GameObject gameObject, bool recursive = false)
         {
             var children = new List<Transform>();
 
@@ -38,6 +38,8 @@ namespace MonoExtensions.Runtime
             {
                 var child = gameObject.transform.GetChild(i);
                 children.Add(child);
+
+                if (recursive) children.AddRange(child.Children(true));
             }
 
             return children;
